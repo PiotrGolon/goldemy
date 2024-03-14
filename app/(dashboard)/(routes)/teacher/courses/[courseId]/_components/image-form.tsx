@@ -2,7 +2,7 @@
 
 import * as z from "zod";
 import axios from "axios";
-import { ImageIcon, Pencil, PlusCircle } from "lucide-react";
+import { Pencil, PlusCircle, ImageIcon } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -18,10 +18,9 @@ interface ImageFormProps {
 }
 
 const formSchema = z.object({
-  description: z.string().min(1, {
-    message: "Description is required",
+  imageUrl: z.string().min(1, {
+    message: "Image is required",
   }),
-  imageUrl: z.string().optional(), // Dodaj tę linię
 });
 
 export const ImageForm = ({ initialData, courseId }: ImageFormProps) => {
@@ -34,11 +33,11 @@ export const ImageForm = ({ initialData, courseId }: ImageFormProps) => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await axios.patch(`/api/courses/${courseId}`, values);
-      toast.success("Image updated successfully!");
+      toast.success("Course updated");
       toggleEdit();
       router.refresh();
     } catch {
-      toast.error("Something went wrong!");
+      toast.error("Something went wrong");
     }
   };
 
@@ -57,7 +56,7 @@ export const ImageForm = ({ initialData, courseId }: ImageFormProps) => {
           {!isEditing && initialData.imageUrl && (
             <>
               <Pencil className="h-4 w-4 mr-2" />
-              Edit
+              Edit image
             </>
           )}
         </Button>
@@ -87,7 +86,7 @@ export const ImageForm = ({ initialData, courseId }: ImageFormProps) => {
               }
             }}
           />
-          <div className="text-sm text-muted-foreground mt-4">
+          <div className="text-xs text-muted-foreground mt-4">
             16:9 aspect ratio recommended
           </div>
         </div>
